@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html ng-app="app">
+<head>
+	<title>Dgeni Angular</title>
+	<link rel="stylesheet" type="text/css" href="/lib/angular-material/angular-material.css">
+	<script src="/lib/angular/angular.js"></script>
+	<script src="/lib/angular-animate/angular-animate.js"></script>
+	<script src="/lib/angular-aria/angular-aria.js"></script>
+	<script src="/lib/hammerjs/hammer.js"></script>
+	<script src="/lib/angular-material/angular-material.js"></script>
+	<script src="/lib/angular-material/angular-material.css"></script>
+
+	<script type="text/javascript">
+		angular.module('app', ['ngMaterial', 'ngAnimate', 'ngAria'])
+				.controller('AppCtrl', function ($scope, $timeout, $mdSidenav, $mdUtil, $log) {
+					$scope.toggleLeft = buildToggler('left');
+					$scope.toggleRight = buildToggler('right');
+					/**
+					 * Build handler to open/close a SideNav; when animation finishes
+					 * report completion in console
+					 */
+					function buildToggler(navID) {
+						var debounceFn = $mdUtil.debounce(function () {
+							$mdSidenav(navID)
+									.toggle()
+									.then(function () {
+										$log.debug("toggle " + navID + " is done");
+									});
+						}, 300);
+						return debounceFn;
+					}
+				})
+				.controller('LeftCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+					$scope.close = function () {
+						$mdSidenav('left').close()
+								.then(function () {
+									$log.debug("close LEFT is done");
+								});
+					};
+				})
+				.controller('RightCtrl', function ($scope, $timeout, $mdSidenav, $log) {
+					$scope.close = function () {
+						$mdSidenav('right').close()
+								.then(function () {
+									$log.debug("close RIGHT is done");
+								});
+					};
+				});
+
+	</script>
+</head>
+<body
+		layout="vertical"
+		style="width: 100%"
+		class="material-whiteframe-z1">
+
+<div ng-controller="AppCtrl" layout="column" style="width: 100%;">
+	<md-toolbar>
+		<div class="md-toolbar-tools">
+			<h2>
+				<span>Toolbar with Icon Buttons</span>
+			</h2>
+		</div>
+	</md-toolbar>
+	<section layout="row" flex>
+		<md-sidenav class="md-sidenav-left md-whiteframe-z2" md-component-id="left" md-is-locked-open="$mdMedia('gt-md')">
+			<md-toolbar class="md-theme-indigo">
+				<h1 class="md-toolbar-tools">Sidenav Left</h1>
+			</md-toolbar>
+			<md-content layout-padding ng-controller="LeftCtrl">
+				<md-button ng-click="close()" class="md-primary" hide-gt-md>
+					Close Sidenav Left
+				</md-button>
+				<p hide-md show-gt-md>
+					{% include "partials/navbar.template.html" %}
+				</p>
+			</md-content>
+		</md-sidenav>
+		<md-content flex layout-padding>
+
+			<div layout="column" layout-fill layout-align="top center">
+				<p>
+					{% block body%}{% endblock %}
+				</p>
+
+				<div>
+					<md-button ng-click="toggleLeft()"
+										 class="md-primary" hide-gt-md>
+						Toggle left
+					</md-button>
+				</div>
+				<div>
+					<md-button ng-click="toggleRight()"
+										 class="md-primary">
+						Toggle right
+					</md-button>
+				</div>
+			</div>
+			<div flex></div>
+		</md-content>
+		<md-sidenav class="md-sidenav-right md-whiteframe-z2" md-component-id="right">
+			<md-toolbar class="md-theme-light">
+				<h1 class="md-toolbar-tools">Sidenav Right</h1>
+			</md-toolbar>
+			<md-content ng-controller="RightCtrl" layout-padding>
+				<form>
+					<md-input-container>
+						<label for="testInput">Test input</label>
+						<input type="text" id="testInput"
+									 ng-model="data" md-sidenav-focus>
+					</md-input-container>
+				</form>
+				<md-button ng-click="close()" class="md-primary">
+					Close Sidenav Right
+				</md-button>
+			</md-content>
+		</md-sidenav>
+	</section>
+</div>
+</body>
+</html>
