@@ -1,31 +1,35 @@
-{% if doc.dependencies.length -%}
+{% for main in docs %}
+	{% if main.name == 'app' %}
+		{% if main.dependencies.length %}
 
-<h3>Index</h3>
+		<h3>Index</h3>
 
-<ul>
-	{%- for dep in doc.dependencies %}
-	<li>
-		{$ dep | relativeLink(doc) $}
-	</li>
-
-
-	<!-- Services and Controllers for each module -->
-	{% for groupName, group in dep.groups %}
-	{% if group.children.length %}
-	<material-divider></material-divider>
-	<h3>{$ group | relativeLink(doc, group.title) $}</h3>
-	<ul>
-		{% for component in group.children %}
-		<li>{$ component | relativeLink(doc) $}</li>
-		{%- endfor %}
-	</ul>
-	{%- endif %}
-	{%- endfor %}
+		<ul>
+			{% for dep in main.dependencies %}
+			<li>
+				{$ dep | relativeLink(doc) $}
+			</li>
 
 
-	{%- endfor %}
-</ul>
-{%- endif %}
+			<!-- Services and Controllers for each module -->
+			{% for groupName, group in dep.groups %}
+			{% if group.children.length %}
+			<material-divider></material-divider>
+			<h3>{$ group | relativeLink(doc, group.title) $}</h3>
+			<ul>
+				{% for component in group.children %}
+				<li>{$ component | relativeLink(doc) $}</li>
+				{%- endfor %}
+			</ul>
+			{% endif %}
+			{% endfor %}
+
+
+			{% endfor %}
+		</ul>
+		{% endif %}
+	{% endif %}
+{% endfor %}
 
 
 
