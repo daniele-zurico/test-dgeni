@@ -6,7 +6,7 @@ var Package = require('dgeni').Package;
 module.exports = new Package('dgeni-example', [
   require('dgeni-packages/angularjs'),
   require('dgeni-packages/jsdoc'),
-  require('dgeni-packages/nunjucks')
+  require('dgeni-packages/nunjucks'),
 ])
 
 
